@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6,19 +6,19 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require('react');
+var _react = require("react");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _propTypes = require('prop-types');
+var _propTypes = require("prop-types");
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _browser = require('node-blockly/browser');
+var _browser = require("node-blockly/browser");
 
 var _browser2 = _interopRequireDefault(_browser);
 
-var _BlocklyToolbox = require('./BlocklyToolbox');
+var _BlocklyToolbox = require("./BlocklyToolbox");
 
 var _BlocklyToolbox2 = _interopRequireDefault(_BlocklyToolbox);
 
@@ -54,17 +54,17 @@ var BlocklyDrawer = function (_Component) {
   }
 
   _createClass(BlocklyDrawer, [{
-    key: 'componentWillMount',
+    key: "componentWillMount",
     value: function componentWillMount() {
       initTools(this.props.tools);
     }
   }, {
-    key: 'componentDidMount',
+    key: "componentDidMount",
     value: function componentDidMount() {
       var _this2 = this;
 
       if (this.wrapper) {
-        window.addEventListener('resize', this.onResize, false);
+        window.addEventListener("resize", this.onResize, false);
         this.onResize();
 
         this.workspacePlayground = _browser2.default.inject(this.content, Object.assign({ toolbox: this.toolbox }, this.props.injectOptions));
@@ -84,38 +84,39 @@ var BlocklyDrawer = function (_Component) {
       }
     }
   }, {
-    key: 'componentWillReceiveProps',
+    key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
       initTools(nextProps.tools);
-      this.workspacePlayground.clear();
+      // this.workspacePlayground.clear();
       if (nextProps.workspaceXML) {
         var dom = _browser2.default.Xml.textToDom(nextProps.workspaceXML);
         _browser2.default.Xml.domToWorkspace(dom, this.workspacePlayground);
       }
     }
   }, {
-    key: 'componentWillUnmount',
+    key: "componentWillUnmount",
     value: function componentWillUnmount() {
-      window.removeEventListener('resize', this.onResize);
+      window.removeEventListener("resize", this.onResize);
+      this.workspacePlayground.clear();
     }
   }, {
-    key: 'onResize',
+    key: "onResize",
     value: function onResize() {
       var element = this.wrapper;
       do {
         element = element.offsetParent;
       } while (element);
-      this.content.style.width = this.wrapper.offsetWidth + 'px';
-      this.content.style.height = this.wrapper.offsetHeight + 'px';
+      this.content.style.width = this.wrapper.offsetWidth + "px";
+      this.content.style.height = this.wrapper.offsetHeight + "px";
     }
   }, {
-    key: 'render',
+    key: "render",
     value: function render() {
       var _this3 = this;
 
       var wrapperStyle = Object.assign({}, styles.wrapper, this.props.style);
       return _react2.default.createElement(
-        'div',
+        "div",
         {
           className: this.props.className,
           style: wrapperStyle,
@@ -123,7 +124,7 @@ var BlocklyDrawer = function (_Component) {
             _this3.wrapper = wrapper;
           }
         },
-        _react2.default.createElement('div', {
+        _react2.default.createElement("div", {
           style: styles.content,
           ref: function ref(content) {
             _this3.content = content;
@@ -155,11 +156,11 @@ var BlocklyDrawer = function (_Component) {
 BlocklyDrawer.defaultProps = {
   onChange: function onChange() {},
   tools: [],
-  workspaceXML: '',
+  workspaceXML: "",
   injectOptions: {},
   language: _browser2.default.JavaScript,
   appearance: {},
-  className: '',
+  className: "",
   style: {}
 };
 
@@ -182,11 +183,11 @@ BlocklyDrawer.propTypes = {
 
 styles = {
   wrapper: {
-    minHeight: '400px',
-    position: 'relative'
+    minHeight: "400px",
+    position: "relative"
   },
   content: {
-    position: 'absolute'
+    position: "absolute"
   }
 };
 

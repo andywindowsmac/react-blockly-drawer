@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import Blockly from 'node-blockly/browser';
-import BlocklyToolbox from './BlocklyToolbox';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import Blockly from "node-blockly/browser";
+import BlocklyToolbox from "./BlocklyToolbox";
 
 let styles = null;
 
-const initTools = (tools) => {
-  tools.forEach((tool) => {
+const initTools = tools => {
+  tools.forEach(tool => {
     Blockly.Blocks[tool.name] = tool.block;
     Blockly.JavaScript[tool.name] = tool.generator;
   });
@@ -26,26 +26,17 @@ class BlocklyDrawer extends Component {
 
   componentDidMount() {
     if (this.wrapper) {
-      window.addEventListener(
-        'resize',
-        this.onResize,
-        false
-      );
+      window.addEventListener("resize", this.onResize, false);
       this.onResize();
 
       this.workspacePlayground = Blockly.inject(
         this.content,
-        Object.assign(
-            { toolbox: this.toolbox },
-            this.props.injectOptions
-        )
+        Object.assign({ toolbox: this.toolbox }, this.props.injectOptions)
       );
 
       if (this.props.workspaceXML) {
         Blockly.Xml.domToWorkspace(
-          Blockly.Xml.textToDom(
-            this.props.workspaceXML
-          ),
+          Blockly.Xml.textToDom(this.props.workspaceXML),
           this.workspacePlayground
         );
       }
@@ -65,7 +56,7 @@ class BlocklyDrawer extends Component {
 
   componentWillReceiveProps(nextProps) {
     initTools(nextProps.tools);
-    this.workspacePlayground.clear();
+    // this.workspacePlayground.clear();
     if (nextProps.workspaceXML) {
       const dom = Blockly.Xml.textToDom(nextProps.workspaceXML);
       Blockly.Xml.domToWorkspace(dom, this.workspacePlayground);
@@ -73,10 +64,8 @@ class BlocklyDrawer extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener(
-      'resize',
-      this.onResize
-    );
+    window.removeEventListener("resize", this.onResize);
+    this.workspacePlayground.clear();
   }
 
   onResize() {
@@ -89,38 +78,30 @@ class BlocklyDrawer extends Component {
   }
 
   render() {
-    const wrapperStyle = Object.assign(
-      {},
-      styles.wrapper,
-      this.props.style,
-    );
+    const wrapperStyle = Object.assign({}, styles.wrapper, this.props.style);
     return (
       <div
         className={this.props.className}
         style={wrapperStyle}
-        ref={(wrapper) => {
+        ref={wrapper => {
           this.wrapper = wrapper;
         }}
       >
         <div
           style={styles.content}
-          ref={(content) => {
+          ref={content => {
             this.content = content;
           }}
         />
         <BlocklyToolbox
-          onRef={(toolbox) => {
+          onRef={toolbox => {
             this.toolbox = toolbox;
           }}
           tools={this.props.tools}
           appearance={this.props.appearance}
           onUpdate={() => {
-            if (
-              this.workspacePlayground
-              && this.toolbox
-            ) {
-              this.workspacePlayground
-                .updateToolbox(this.toolbox.outerHTML);
+            if (this.workspacePlayground && this.toolbox) {
+              this.workspacePlayground.updateToolbox(this.toolbox.outerHTML);
             }
           }}
         >
@@ -134,21 +115,23 @@ class BlocklyDrawer extends Component {
 BlocklyDrawer.defaultProps = {
   onChange: () => {},
   tools: [],
-  workspaceXML: '',
+  workspaceXML: "",
   injectOptions: {},
   language: Blockly.JavaScript,
   appearance: {},
-  className: '',
-  style: {},
+  className: "",
+  style: {}
 };
 
 BlocklyDrawer.propTypes = {
-  tools: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
-    category: PropTypes.string,
-    block: PropTypes.shape({ init: PropTypes.func }),
-    generator: PropTypes.func,
-  })).isRequired,
+  tools: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string,
+      category: PropTypes.string,
+      block: PropTypes.shape({ init: PropTypes.func }),
+      generator: PropTypes.func
+    })
+  ).isRequired,
   onChange: PropTypes.func,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
@@ -159,17 +142,17 @@ BlocklyDrawer.propTypes = {
   language: PropTypes.object,
   appearance: PropTypes.object,
   className: PropTypes.string,
-  style: PropTypes.object,
+  style: PropTypes.object
 };
 
 styles = {
   wrapper: {
-    minHeight: '400px',
-    position: 'relative',
+    minHeight: "400px",
+    position: "relative"
   },
   content: {
-    position: 'absolute',
-  },
+    position: "absolute"
+  }
 };
 
 export default BlocklyDrawer;
