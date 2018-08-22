@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Blockly from "node-blockly/browser";
-import BlocklyToolbox from "./BlocklyToolbox";
+import * as MergeXML from "mergexml";
+
+import BlocksGenerator from "./BlocksGenerator";
 
 let styles = null;
 
@@ -29,10 +31,25 @@ class BlocklyDrawer extends Component {
       window.addEventListener("resize", this.onResize, false);
       this.onResize();
 
-      this.workspacePlayground = Blockly.inject(
-        this.content,
-        Object.assign({ toolbox: this.toolbox }, this.props.injectOptions)
-      );
+      if (this.props.injectOptions && this.props.tools) {
+        const toolsXML = BlocksGenerator.generate(this.props.tools);
+        const merger = new MergeXML({ updn: true });
+        merger.AddSource(toolsXML);
+        merger.AddSource(this.props.injectOptions.toolbox);
+        const newInjectOptions = {
+          ...this.props.injectOptions,
+          toolbox: merger.Get(1)
+        };
+        this.workspacePlayground = Blockly.inject(
+          this.content,
+          Object.assign({ toolbox: this.toolbox }, newInjectOptions)
+        );
+      } else {
+        this.workspacePlayground = Blockly.inject(
+          this.content,
+          Object.assign({ toolbox: this.toolbox }, this.props.injectOptions)
+        );
+      }
 
       if (this.props.workspaceXML) {
         Blockly.Xml.domToWorkspace(
@@ -92,20 +109,6 @@ class BlocklyDrawer extends Component {
             this.content = content;
           }}
         />
-        <BlocklyToolbox
-          onRef={toolbox => {
-            this.toolbox = toolbox;
-          }}
-          tools={this.props.tools}
-          appearance={this.props.appearance}
-          onUpdate={() => {
-            if (this.workspacePlayground && this.toolbox) {
-              this.workspacePlayground.updateToolbox(this.toolbox.outerHTML);
-            }
-          }}
-        >
-          {this.props.children}
-        </BlocklyToolbox>
       </div>
     );
   }
