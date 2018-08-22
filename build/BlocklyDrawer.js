@@ -34,8 +34,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var MergeXML = require("mergexml");
-
 var styles = null;
 
 var isToolsAlreadyExist = function isToolsAlreadyExist(tools) {
@@ -110,18 +108,20 @@ var BlocklyDrawer = function (_Component) {
     key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
       if (nextProps.isCustomBehavior && nextProps.tools && !isToolsAlreadyExist(nextProps.tools)) {
-        var toolsXML = _BlocksGenerator2.default.generate(nextProps.tools);
-        var merger = new MergeXML({ updn: true });
-        merger.AddSource(toolsXML);
-        merger.AddSource(nextProps.injectOptions.toolbox);
+        var newToolsXML = parser.parseFromString(nextProps.injectOptions.toolbox, "text/xml");
+
+        _BlocksGenerator2.default.generate(newToolsXML, nextProps.tools);
+        var oSerializer = new XMLSerializer();
+        var newToolsString = oSerializer.serializeToString(newToolsXML);
+
         var newInjectOptions = Object.assign({}, nextProps.injectOptions, {
-          toolbox: merger.Get(1)
+          toolbox: newToolsString
         });
         this.workspacePlayground = _browser2.default.inject(this.content, Object.assign({ toolbox: this.toolbox }, newInjectOptions));
 
         initTools(nextProps.tools);
 
-        workspace.updateToolbox(newTree);
+        this.workspacePlayground.updateToolbox(newTree);
         if (nextProps.workspaceXML) {
           var dom = _browser2.default.Xml.textToDom(nextProps.workspaceXML);
           _browser2.default.Xml.domToWorkspace(dom, this.workspacePlayground);
