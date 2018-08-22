@@ -113,14 +113,13 @@ var BlocklyDrawer = function (_Component) {
         _BlocksGenerator2.default.generate(newToolsXML, nextProps.tools);
         var oSerializer = new XMLSerializer();
         var newToolsString = oSerializer.serializeToString(newToolsXML);
-
-        var newInjectOptions = Object.assign({}, nextProps.injectOptions, {
+        this.toolbox = Object.assign({}, nextProps.injectOptions, {
           toolbox: newToolsString
         });
 
         initTools(nextProps.tools);
 
-        _browser2.default.updateToolbox(newTree);
+        _browser2.default.updateToolbox(newToolsString);
         if (nextProps.workspaceXML) {
           var dom = _browser2.default.Xml.textToDom(nextProps.workspaceXML);
           _browser2.default.Xml.domToWorkspace(dom, this.workspacePlayground);
