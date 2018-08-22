@@ -33,7 +33,7 @@ var BlocksGenerator = {
     return tools.map(function (_ref) {
       var name = _ref.name;
 
-      var newBlock = newToolsXML.createElement("block");
+      var newBlock = newToolsXML.createElement("block", {});
       newBlock.setAttribute("type", name);
       newToolsXML.getElementsByTagName("xml")[0].appendChild(newBlock);
     });

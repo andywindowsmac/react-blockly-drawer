@@ -117,11 +117,10 @@ var BlocklyDrawer = function (_Component) {
         var newInjectOptions = Object.assign({}, nextProps.injectOptions, {
           toolbox: newToolsString
         });
-        this.workspacePlayground = _browser2.default.inject(this.content, Object.assign({ toolbox: this.toolbox }, newInjectOptions));
 
         initTools(nextProps.tools);
 
-        this.workspacePlayground.updateToolbox(newTree);
+        _browser2.default.updateToolbox(newTree);
         if (nextProps.workspaceXML) {
           var dom = _browser2.default.Xml.textToDom(nextProps.workspaceXML);
           _browser2.default.Xml.domToWorkspace(dom, this.workspacePlayground);
