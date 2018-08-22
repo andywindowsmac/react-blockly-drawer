@@ -18,9 +18,15 @@ var _browser = require("node-blockly/browser");
 
 var _browser2 = _interopRequireDefault(_browser);
 
-var _BlocklyToolbox = require("./BlocklyToolbox");
+var _mergexml = require("mergexml");
 
-var _BlocklyToolbox2 = _interopRequireDefault(_BlocklyToolbox);
+var MergeXML = _interopRequireWildcard(_mergexml);
+
+var _BlocksGenerator = require("./BlocksGenerator");
+
+var _BlocksGenerator2 = _interopRequireDefault(_BlocksGenerator);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -67,7 +73,18 @@ var BlocklyDrawer = function (_Component) {
         window.addEventListener("resize", this.onResize, false);
         this.onResize();
 
-        this.workspacePlayground = _browser2.default.inject(this.content, Object.assign({ toolbox: this.toolbox }, this.props.injectOptions));
+        if (this.props.injectOptions && this.props.tools) {
+          var toolsXML = _BlocksGenerator2.default.generate(this.props.tools);
+          var merger = new MergeXML({ updn: true });
+          merger.AddSource(toolsXML);
+          merger.AddSource(this.props.injectOptions.toolbox);
+          var newInjectOptions = Object.assign({}, this.props.injectOptions, {
+            toolbox: merger.Get(1)
+          });
+          this.workspacePlayground = _browser2.default.inject(this.content, Object.assign({ toolbox: this.toolbox }, newInjectOptions));
+        } else {
+          this.workspacePlayground = _browser2.default.inject(this.content, Object.assign({ toolbox: this.toolbox }, this.props.injectOptions));
+        }
 
         if (this.props.workspaceXML) {
           _browser2.default.Xml.domToWorkspace(_browser2.default.Xml.textToDom(this.props.workspaceXML), this.workspacePlayground);
@@ -87,7 +104,6 @@ var BlocklyDrawer = function (_Component) {
     key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
       initTools(nextProps.tools);
-      // this.workspacePlayground.clear();
       if (nextProps.workspaceXML) {
         var dom = _browser2.default.Xml.textToDom(nextProps.workspaceXML);
         _browser2.default.Xml.domToWorkspace(dom, this.workspacePlayground);
@@ -129,23 +145,7 @@ var BlocklyDrawer = function (_Component) {
           ref: function ref(content) {
             _this3.content = content;
           }
-        }),
-        _react2.default.createElement(
-          _BlocklyToolbox2.default,
-          {
-            onRef: function onRef(toolbox) {
-              _this3.toolbox = toolbox;
-            },
-            tools: this.props.tools,
-            appearance: this.props.appearance,
-            onUpdate: function onUpdate() {
-              if (_this3.workspacePlayground && _this3.toolbox) {
-                _this3.workspacePlayground.updateToolbox(_this3.toolbox.outerHTML);
-              }
-            }
-          },
-          this.props.children
-        )
+        })
       );
     }
   }]);
