@@ -19,7 +19,7 @@ const BlocksGenerator = {
         categoryXML.writeElement("block").writeAttribute("type", blockType);
       });
       categoryXML.endDocument();
-      return categoryXML;
+      return categoryXML.toString();
     });
   },
   generateBlocks: tools => {
@@ -29,7 +29,7 @@ const BlocksGenerator = {
       blocks.startElement("block").writeAttribute("type", name);
     });
     blocks.endDocument();
-    return blocks;
+    return blocks.toString();
   },
   generate: tools => {
     if (tools[0].category) {
