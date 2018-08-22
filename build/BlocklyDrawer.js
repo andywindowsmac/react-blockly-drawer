@@ -73,7 +73,7 @@ var BlocklyDrawer = function (_Component) {
         window.addEventListener("resize", this.onResize, false);
         this.onResize();
 
-        if (this.props.injectOptions && this.props.tools) {
+        if (this.props.injectOptions && this.props.tools && this.props.isCustomBehavior) {
           var toolsXML = _BlocksGenerator2.default.generate(this.props.tools);
           var merger = new MergeXML({ updn: true });
           merger.AddSource(toolsXML);
@@ -145,7 +145,20 @@ var BlocklyDrawer = function (_Component) {
           ref: function ref(content) {
             _this3.content = content;
           }
-        })
+        }),
+        !this.props.isCustomBehavior && _react2.default.createElement(BlocklyToolbox, {
+          onRef: function onRef(toolbox) {
+            _this3.toolbox = toolbox;
+          },
+          tools: this.props.tools,
+          appearance: this.props.appearance,
+          onUpdate: function onUpdate() {
+            if (_this3.workspacePlayground && _this3.toolbox) {
+              _this3.workspacePlayground.updateToolbox(_this3.toolbox.outerHTML);
+            }
+          }
+        }),
+        this.props.children
       );
     }
   }]);
