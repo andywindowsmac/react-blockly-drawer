@@ -99,14 +99,10 @@ class BlocklyDrawer extends Component {
       const newInjectOptions = Object.assign({}, nextProps.injectOptions, {
         toolbox: newToolsString
       });
-      this.workspacePlayground = Blockly.inject(
-        this.content,
-        Object.assign({ toolbox: this.toolbox }, newInjectOptions)
-      );
 
       initTools(nextProps.tools);
 
-      this.workspacePlayground.updateToolbox(newTree);
+      Blockly.updateToolbox(newTree);
       if (nextProps.workspaceXML) {
         const dom = Blockly.Xml.textToDom(nextProps.workspaceXML);
         Blockly.Xml.domToWorkspace(dom, this.workspacePlayground);

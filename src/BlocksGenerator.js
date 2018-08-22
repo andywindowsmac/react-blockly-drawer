@@ -25,7 +25,7 @@ const BlocksGenerator = {
   },
   generateBlocks: (newToolsXML, tools) => {
     return tools.map(({ name }) => {
-      const newBlock = newToolsXML.createElement("block");
+      const newBlock = newToolsXML.createElement("block", {});
       newBlock.setAttribute("type", name);
       newToolsXML.getElementsByTagName("xml")[0].appendChild(newBlock);
     });
