@@ -8,6 +8,12 @@ import BlocklyToolbox from "./BlocklyToolbox";
 
 let styles = null;
 
+const isToolsAlreadyExist = tools => {
+  tools.filter(tool => {
+    return !Blockly.Blocks[tool.name] && !Blockly.JavaScript[tool.name];
+  }).length === 0;
+};
+
 const initTools = tools => {
   tools.forEach(tool => {
     Blockly.Blocks[tool.name] = tool.block;
@@ -77,10 +83,30 @@ class BlocklyDrawer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    initTools(nextProps.tools);
-    if (nextProps.workspaceXML) {
-      const dom = Blockly.Xml.textToDom(nextProps.workspaceXML);
-      Blockly.Xml.domToWorkspace(dom, this.workspacePlayground);
+    if (
+      nextProps.isCustomBehavior &&
+      nextProps.tools &&
+      !isToolsAlreadyExist(nextProps.tools)
+    ) {
+      const toolsXML = BlocksGenerator.generate(nextProps.tools);
+      const merger = new MergeXML({ updn: true });
+      merger.AddSource(toolsXML);
+      merger.AddSource(nextProps.injectOptions.toolbox);
+      const newInjectOptions = Object.assign({}, nextProps.injectOptions, {
+        toolbox: merger.Get(1)
+      });
+      this.workspacePlayground = Blockly.inject(
+        this.content,
+        Object.assign({ toolbox: this.toolbox }, newInjectOptions)
+      );
+
+      initTools(nextProps.tools);
+
+      workspace.updateToolbox(newTree);
+      if (nextProps.workspaceXML) {
+        const dom = Blockly.Xml.textToDom(nextProps.workspaceXML);
+        Blockly.Xml.domToWorkspace(dom, this.workspacePlayground);
+      }
     }
   }
 
