@@ -4,6 +4,7 @@ import Blockly from "node-blockly/browser";
 const MergeXML = require("mergexml");
 
 import BlocksGenerator from "./BlocksGenerator";
+import BlocklyToolbox from "./BlocklyToolbox";
 
 let styles = null;
 
