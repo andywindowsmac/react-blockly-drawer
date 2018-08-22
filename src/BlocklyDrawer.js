@@ -87,7 +87,7 @@ class BlocklyDrawer extends Component {
       nextProps.tools &&
       !isToolsAlreadyExist(nextProps.tools)
     ) {
-      const newToolsXML = parser.parseFromString(
+      const newToolsXML = new DOMParser().parseFromString(
         nextProps.injectOptions.toolbox,
         "text/xml"
       );
