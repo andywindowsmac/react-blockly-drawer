@@ -34,6 +34,7 @@ class BlocklyDrawer extends Component {
       if (
         this.props.injectOptions &&
         this.props.tools &&
+        this.props.tools.length !== 0 &&
         this.props.isCustomBehavior
       ) {
         const toolsXML = BlocksGenerator.generate(this.props.tools);
