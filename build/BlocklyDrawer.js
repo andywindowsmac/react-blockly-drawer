@@ -22,6 +22,10 @@ var _BlocksGenerator = require("./BlocksGenerator");
 
 var _BlocksGenerator2 = _interopRequireDefault(_BlocksGenerator);
 
+var _BlocklyToolbox = require("./BlocklyToolbox");
+
+var _BlocklyToolbox2 = _interopRequireDefault(_BlocklyToolbox);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -142,7 +146,7 @@ var BlocklyDrawer = function (_Component) {
             _this3.content = content;
           }
         }),
-        !this.props.isCustomBehavior && _react2.default.createElement(BlocklyToolbox, {
+        !this.props.isCustomBehavior && _react2.default.createElement(_BlocklyToolbox2.default, {
           onRef: function onRef(toolbox) {
             _this3.toolbox = toolbox;
           },
