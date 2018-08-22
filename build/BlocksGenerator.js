@@ -22,7 +22,7 @@ var BlocksGenerator = {
         categoryXML.writeElement("block").writeAttribute("type", blockType);
       });
       categoryXML.endDocument();
-      return categoryXML;
+      return categoryXML.toString();
     });
   },
   generateBlocks: function generateBlocks(tools) {
@@ -34,7 +34,7 @@ var BlocksGenerator = {
       blocks.startElement("block").writeAttribute("type", name);
     });
     blocks.endDocument();
-    return blocks;
+    return blocks.toString();
   },
   generate: function generate(tools) {
     if (tools[0].category) {
