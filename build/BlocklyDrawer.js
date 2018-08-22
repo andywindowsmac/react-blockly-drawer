@@ -108,7 +108,7 @@ var BlocklyDrawer = function (_Component) {
     key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
       if (nextProps.isCustomBehavior && nextProps.tools && !isToolsAlreadyExist(nextProps.tools)) {
-        var newToolsXML = parser.parseFromString(nextProps.injectOptions.toolbox, "text/xml");
+        var newToolsXML = new DOMParser().parseFromString(nextProps.injectOptions.toolbox, "text/xml");
 
         _BlocksGenerator2.default.generate(newToolsXML, nextProps.tools);
         var oSerializer = new XMLSerializer();
