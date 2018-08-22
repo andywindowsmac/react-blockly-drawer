@@ -69,7 +69,7 @@ var BlocklyDrawer = function (_Component) {
         window.addEventListener("resize", this.onResize, false);
         this.onResize();
 
-        if (this.props.injectOptions && this.props.tools && this.props.isCustomBehavior) {
+        if (this.props.injectOptions && this.props.tools && this.props.tools.length !== 0 && this.props.isCustomBehavior) {
           var toolsXML = _BlocksGenerator2.default.generate(this.props.tools);
           var merger = new MergeXML({ updn: true });
           merger.AddSource(toolsXML);
