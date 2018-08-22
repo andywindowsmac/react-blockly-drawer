@@ -1,6 +1,19 @@
 const XMLWriter = require("xml-writer");
 
 const BlocksGenerator = {
+  generateXMLStart: writer => {
+    writer.startPI("xml");
+    writer.startAttribute("xmlns");
+    writer.text("http://www.w3.org/1999/xhtml");
+    writer.endAttribute();
+    writer.startAttribute("id");
+    writer.text("toolbox");
+    writer.endAttribute();
+    writer.startAttribute("style");
+    writer.text("display: none;");
+    writer.endAttribute();
+    return writer;
+  },
   groupByCategory: tools =>
     tools.reduce((accumulated, item) => {
       const result = accumulated;
@@ -9,12 +22,9 @@ const BlocksGenerator = {
       return result;
     }, {}),
   generateBlocksWithCategories: groupedTools => {
+    const categoryXML = BlocksGenerator.generateXMLStart(new XMLWriter());
     return Object.keys(groupedTools).map(key => {
-      const categoryXML = new XMLWriter();
-      categoryXML
-        .startDocument()
-        .startElement("category")
-        .writeAttribute("name", key);
+      categoryXML.startElement("category").writeAttribute("name", key);
       groupedTools[key].map(blockType => {
         categoryXML.writeElement("block").writeAttribute("type", blockType);
       });
@@ -23,8 +33,7 @@ const BlocksGenerator = {
     });
   },
   generateBlocks: tools => {
-    const blocks = new XMLWriter();
-    blocks.startDocument();
+    const blocks = BlocksGenerator.generateXMLStart(new XMLWriter());
     tools.map(({ name }) => {
       blocks.startElement("block").writeAttribute("type", name);
     });
