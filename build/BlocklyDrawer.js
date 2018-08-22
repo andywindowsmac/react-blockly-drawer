@@ -38,6 +38,12 @@ var MergeXML = require("mergexml");
 
 var styles = null;
 
+var isToolsAlreadyExist = function isToolsAlreadyExist(tools) {
+  tools.filter(function (tool) {
+    return !_browser2.default.Blocks[tool.name] && !_browser2.default.JavaScript[tool.name];
+  }).length === 0;
+};
+
 var initTools = function initTools(tools) {
   tools.forEach(function (tool) {
     _browser2.default.Blocks[tool.name] = tool.block;
@@ -103,10 +109,23 @@ var BlocklyDrawer = function (_Component) {
   }, {
     key: "componentWillReceiveProps",
     value: function componentWillReceiveProps(nextProps) {
-      initTools(nextProps.tools);
-      if (nextProps.workspaceXML) {
-        var dom = _browser2.default.Xml.textToDom(nextProps.workspaceXML);
-        _browser2.default.Xml.domToWorkspace(dom, this.workspacePlayground);
+      if (nextProps.isCustomBehavior && nextProps.tools && !isToolsAlreadyExist(nextProps.tools)) {
+        var toolsXML = _BlocksGenerator2.default.generate(nextProps.tools);
+        var merger = new MergeXML({ updn: true });
+        merger.AddSource(toolsXML);
+        merger.AddSource(nextProps.injectOptions.toolbox);
+        var newInjectOptions = Object.assign({}, nextProps.injectOptions, {
+          toolbox: merger.Get(1)
+        });
+        this.workspacePlayground = _browser2.default.inject(this.content, Object.assign({ toolbox: this.toolbox }, newInjectOptions));
+
+        initTools(nextProps.tools);
+
+        workspace.updateToolbox(newTree);
+        if (nextProps.workspaceXML) {
+          var dom = _browser2.default.Xml.textToDom(nextProps.workspaceXML);
+          _browser2.default.Xml.domToWorkspace(dom, this.workspacePlayground);
+        }
       }
     }
   }, {
