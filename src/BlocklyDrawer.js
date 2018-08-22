@@ -31,7 +31,11 @@ class BlocklyDrawer extends Component {
       window.addEventListener("resize", this.onResize, false);
       this.onResize();
 
-      if (this.props.injectOptions && this.props.tools) {
+      if (
+        this.props.injectOptions &&
+        this.props.tools &&
+        this.props.isCustomBehavior
+      ) {
         const toolsXML = BlocksGenerator.generate(this.props.tools);
         const merger = new MergeXML({ updn: true });
         merger.AddSource(toolsXML);
@@ -108,6 +112,21 @@ class BlocklyDrawer extends Component {
             this.content = content;
           }}
         />
+        {!this.props.isCustomBehavior && (
+          <BlocklyToolbox
+            onRef={toolbox => {
+              this.toolbox = toolbox;
+            }}
+            tools={this.props.tools}
+            appearance={this.props.appearance}
+            onUpdate={() => {
+              if (this.workspacePlayground && this.toolbox) {
+                this.workspacePlayground.updateToolbox(this.toolbox.outerHTML);
+              }
+            }}
+          />
+        )}
+        {this.props.children}
       </div>
     );
   }
