@@ -36,10 +36,9 @@ class BlocklyDrawer extends Component {
         const merger = new MergeXML({ updn: true });
         merger.AddSource(toolsXML);
         merger.AddSource(this.props.injectOptions.toolbox);
-        const newInjectOptions = {
-          ...this.props.injectOptions,
+        const newInjectOptions = Object.assign({}, this.props.injectOptions, {
           toolbox: merger.Get(1)
-        };
+        });
         this.workspacePlayground = Blockly.inject(
           this.content,
           Object.assign({ toolbox: this.toolbox }, newInjectOptions)
