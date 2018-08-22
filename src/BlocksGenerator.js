@@ -1,19 +1,4 @@
-const XMLWriter = require("xml-writer");
-
 const BlocksGenerator = {
-  generateXMLStart: writer => {
-    writer.startPI("xml");
-    writer.startAttribute("xmlns");
-    writer.text("http://www.w3.org/1999/xhtml");
-    writer.endAttribute();
-    writer.startAttribute("id");
-    writer.text("toolbox");
-    writer.endAttribute();
-    writer.startAttribute("style");
-    writer.text("display: none;");
-    writer.endAttribute();
-    return writer;
-  },
   groupByCategory: tools =>
     tools.reduce((accumulated, item) => {
       const result = accumulated;
@@ -21,36 +6,42 @@ const BlocksGenerator = {
       result[item.category].push(item.name);
       return result;
     }, {}),
-  generateBlocksWithCategories: groupedTools => {
-    const categoryXML = BlocksGenerator.generateXMLStart(new XMLWriter());
-    return Object.keys(groupedTools).map(key => {
-      categoryXML.startElement("category").writeAttribute("name", key);
+  generateBlocksWithCategories: (newToolsXML, groupedTools) => {
+    Object.keys(groupedTools).map(key => {
+      const newCategory = newToolsXML.createElement("category");
+      newCategory.setAttribute("name", key);
+
       groupedTools[key].map(blockType => {
-        categoryXML.writeElement("block").writeAttribute("type", blockType);
+        const newBlock = newToolsXML.createElement("block");
+        newBlock.setAttribute("type", blockType);
+        newCategory.appendChild(newBlock);
       });
-      categoryXML.endDocument();
-      return categoryXML.toString();
+
+      newToolsXML.getElementsByTagName("xml")[0].appendChild(newCategory);
+    });
+
+    categoryXML.endDocument();
+    return categoryXML;
+  },
+  generateBlocks: (newToolsXML, tools) => {
+    return tools.map(({ name }) => {
+      const newBlock = newToolsXML.createElement("block");
+      newBlock.setAttribute("type", name);
+      newToolsXML.getElementsByTagName("xml")[0].appendChild(newBlock);
     });
   },
-  generateBlocks: tools => {
-    const blocks = BlocksGenerator.generateXMLStart(new XMLWriter());
-    tools.map(({ name }) => {
-      blocks.startElement("block").writeAttribute("type", name);
-    });
-    blocks.endDocument();
-    return blocks.toString();
-  },
-  generate: tools => {
+  generate: (newToolsXML, tools) => {
     if (tools[0].category) {
       const groupedByCategory = BlocksGenerator.groupByCategory(tools);
-      const xmls = BlocksGenerator.generateBlocksWithCategories(
+      BlocksGenerator.generateBlocksWithCategories(
+        newToolsXML,
         groupedByCategory
       );
-      return xmls;
+      return;
     }
 
-    const xmls = BlocksGenerator.generateBlocks(tools);
-    return xmls;
+    BlocksGenerator.generateBlocks(newToolsXML, tools);
+    return;
   }
 };
 

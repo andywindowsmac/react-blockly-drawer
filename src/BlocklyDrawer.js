@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Blockly from "node-blockly/browser";
-const MergeXML = require("mergexml");
 
 import BlocksGenerator from "./BlocksGenerator";
 import BlocklyToolbox from "./BlocklyToolbox";
@@ -88,12 +87,17 @@ class BlocklyDrawer extends Component {
       nextProps.tools &&
       !isToolsAlreadyExist(nextProps.tools)
     ) {
-      const toolsXML = BlocksGenerator.generate(nextProps.tools);
-      const merger = new MergeXML({ updn: true });
-      merger.AddSource(toolsXML);
-      merger.AddSource(nextProps.injectOptions.toolbox);
+      const newToolsXML = parser.parseFromString(
+        nextProps.injectOptions.toolbox,
+        "text/xml"
+      );
+
+      BlocksGenerator.generate(newToolsXML, nextProps.tools);
+      var oSerializer = new XMLSerializer();
+      const newToolsString = oSerializer.serializeToString(newToolsXML);
+
       const newInjectOptions = Object.assign({}, nextProps.injectOptions, {
-        toolbox: merger.Get(1)
+        toolbox: newToolsString
       });
       this.workspacePlayground = Blockly.inject(
         this.content,
@@ -102,7 +106,7 @@ class BlocklyDrawer extends Component {
 
       initTools(nextProps.tools);
 
-      workspace.updateToolbox(newTree);
+      this.workspacePlayground.updateToolbox(newTree);
       if (nextProps.workspaceXML) {
         const dom = Blockly.Xml.textToDom(nextProps.workspaceXML);
         Blockly.Xml.domToWorkspace(dom, this.workspacePlayground);
