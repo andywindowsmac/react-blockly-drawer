@@ -1,17 +1,4 @@
-import * as XMLWriter from "xml-writer";
-
-const elements = Object.keys(groupedByCategory).map(key => {
-  const blocks = groupedByCategory[key].map(type => {
-    return <Block type={type} key={type} />;
-  });
-  const categoryAppearance =
-    (appearance && appearance.categories && appearance.categories[key]) || {};
-  return (
-    <Category {...categoryAppearance} key={key} name={key}>
-      {blocks}
-    </Category>
-  );
-});
+const XMLWriter = require("xml-writer");
 
 const BlocksGenerator = {
   groupByCategory: tools =>
