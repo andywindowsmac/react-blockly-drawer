@@ -95,14 +95,13 @@ class BlocklyDrawer extends Component {
       BlocksGenerator.generate(newToolsXML, nextProps.tools);
       var oSerializer = new XMLSerializer();
       const newToolsString = oSerializer.serializeToString(newToolsXML);
-
-      const newInjectOptions = Object.assign({}, nextProps.injectOptions, {
+      this.toolbox = Object.assign({}, nextProps.injectOptions, {
         toolbox: newToolsString
       });
 
       initTools(nextProps.tools);
 
-      Blockly.updateToolbox(newTree);
+      Blockly.updateToolbox(newToolsString);
       if (nextProps.workspaceXML) {
         const dom = Blockly.Xml.textToDom(nextProps.workspaceXML);
         Blockly.Xml.domToWorkspace(dom, this.workspacePlayground);
