@@ -120,10 +120,10 @@ var BlocklyDrawer = function (_Component) {
         initTools(nextProps.tools);
 
         _browser2.default.updateToolbox(newToolsString);
-        if (nextProps.workspaceXML) {
-          var dom = _browser2.default.Xml.textToDom(nextProps.workspaceXML);
-          _browser2.default.Xml.domToWorkspace(dom, this.workspacePlayground);
-        }
+        // if (nextProps.workspaceXML) {
+        //   const dom = Blockly.Xml.textToDom(nextProps.workspaceXML);
+        //   Blockly.Xml.domToWorkspace(dom, this.workspacePlayground);
+        // }
       }
     }
   }, {
