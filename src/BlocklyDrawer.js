@@ -43,7 +43,7 @@ class BlocklyDrawer extends Component {
         this.props.tools.length !== 0 &&
         this.props.isCustomBehavior
       ) {
-        const toolsXML = BlocksGenerator.generate(this.props.tools);
+        const toolsXML = BlocksGenerator.generate(injectOptions.toolbox ,this.props.tools);
         const merger = new MergeXML({ updn: true });
         merger.AddSource(toolsXML);
         merger.AddSource(this.props.injectOptions.toolbox);
