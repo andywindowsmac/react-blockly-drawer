@@ -85,11 +85,15 @@ var BlocklyDrawer = function (_Component) {
           var toolboxXML = new DOMParser().parseFromString(this.props.injectOptions.toolbox, "text/xml");
           var oSerializer = new XMLSerializer();
           _BlocksGenerator2.default.generate(toolboxXML, this.props.tools);
-          var toolsXMLString = oSerializer.serializeToString(toolsXML);
+          var toolsXMLString = oSerializer.serializeToString(toolboxXML);
 
           var newInjectOptions = Object.assign({}, this.props.injectOptions, {
             toolbox: toolsXMLString
           });
+          this.toolbox = Object.assign({}, this.props.injectOptions, {
+            toolbox: toolsXMLString
+          });
+
           this.workspacePlayground = _browser2.default.inject(this.content, Object.assign({ toolbox: this.toolbox }, newInjectOptions));
         } else {
           this.workspacePlayground = _browser2.default.inject(this.content, Object.assign({ toolbox: this.toolbox }, this.props.injectOptions));
