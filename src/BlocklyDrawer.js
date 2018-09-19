@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Blockly from "node-blockly/browser";
+import MergeXML from 'mergexml';
 
 import BlocksGenerator from "./BlocksGenerator";
 import BlocklyToolbox from "./BlocklyToolbox";

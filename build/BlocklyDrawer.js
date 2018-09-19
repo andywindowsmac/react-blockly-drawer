@@ -18,6 +18,10 @@ var _browser = require("node-blockly/browser");
 
 var _browser2 = _interopRequireDefault(_browser);
 
+var _mergexml = require("mergexml");
+
+var _mergexml2 = _interopRequireDefault(_mergexml);
+
 var _BlocksGenerator = require("./BlocksGenerator");
 
 var _BlocksGenerator2 = _interopRequireDefault(_BlocksGenerator);
@@ -80,7 +84,7 @@ var BlocklyDrawer = function (_Component) {
         if (this.props.injectOptions && this.props.tools && this.props.tools.length !== 0 && this.props.isCustomBehavior) {
           var toolboxXML = new DOMParser().parseFromString(this.props.injectOptions.toolbox, "text/xml");
           var toolsXML = _BlocksGenerator2.default.generate(toolboxXML, this.props.tools);
-          var merger = new MergeXML({ updn: true });
+          var merger = new _mergexml2.default({ updn: true });
           merger.AddSource(toolsXML);
           merger.AddSource(this.props.injectOptions.toolbox);
           var newInjectOptions = Object.assign({}, this.props.injectOptions, {
