@@ -48,12 +48,12 @@ class BlocklyDrawer extends Component {
           this.props.injectOptions.toolbox,
           "text/xml"
         );
-        const toolsXML = BlocksGenerator.generate(toolboxXML ,this.props.tools);
-        const merger = new MergeXML({ updn: true });
-        merger.AddSource(toolsXML);
-        merger.AddSource(this.props.injectOptions.toolbox);
+        var oSerializer = new XMLSerializer();
+        BlocksGenerator.generate(toolboxXML ,this.props.tools);
+        const toolsXMLString = oSerializer.serializeToString(toolsXML);
+
         const newInjectOptions = Object.assign({}, this.props.injectOptions, {
-          toolbox: merger.Get(1)
+          toolbox: toolsXMLString
         });
         this.workspacePlayground = Blockly.inject(
           this.content,

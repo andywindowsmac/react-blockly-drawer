@@ -83,12 +83,12 @@ var BlocklyDrawer = function (_Component) {
 
         if (this.props.injectOptions && this.props.tools && this.props.tools.length !== 0 && this.props.isCustomBehavior) {
           var toolboxXML = new DOMParser().parseFromString(this.props.injectOptions.toolbox, "text/xml");
-          var toolsXML = _BlocksGenerator2.default.generate(toolboxXML, this.props.tools);
-          var merger = new _mergexml2.default({ updn: true });
-          merger.AddSource(toolsXML);
-          merger.AddSource(this.props.injectOptions.toolbox);
+          var oSerializer = new XMLSerializer();
+          _BlocksGenerator2.default.generate(toolboxXML, this.props.tools);
+          var toolsXMLString = oSerializer.serializeToString(toolsXML);
+
           var newInjectOptions = Object.assign({}, this.props.injectOptions, {
-            toolbox: merger.Get(1)
+            toolbox: toolsXMLString
           });
           this.workspacePlayground = _browser2.default.inject(this.content, Object.assign({ toolbox: this.toolbox }, newInjectOptions));
         } else {
