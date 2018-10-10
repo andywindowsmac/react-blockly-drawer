@@ -20,8 +20,7 @@ const BlocksGenerator = {
       newToolsXML.getElementsByTagName("xml")[0].appendChild(newCategory);
     });
 
-    categoryXML.endDocument();
-    return categoryXML;
+    return newToolsXML;
   },
   generateBlocks: (newToolsXML, tools) => {
     return tools.map(({ name }) => {
