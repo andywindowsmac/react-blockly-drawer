@@ -90,11 +90,9 @@ var BlocklyDrawer = function (_Component) {
           var newInjectOptions = Object.assign({}, this.props.injectOptions, {
             toolbox: toolsXMLString
           });
-          this.toolbox = Object.assign({}, this.props.injectOptions, {
-            toolbox: toolsXMLString
-          });
+          this.toolbox = Object.assign({}, newInjectOptions);
 
-          this.workspacePlayground = _browser2.default.inject(this.content, Object.assign({ toolbox: this.toolbox }, newInjectOptions));
+          this.workspacePlayground = _browser2.default.inject(this.content, { toolbox: this.toolbox });
         } else {
           this.workspacePlayground = _browser2.default.inject(this.content, Object.assign({ toolbox: this.toolbox }, this.props.injectOptions));
         }

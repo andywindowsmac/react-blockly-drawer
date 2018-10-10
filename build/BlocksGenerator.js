@@ -26,8 +26,7 @@ var BlocksGenerator = {
       newToolsXML.getElementsByTagName("xml")[0].appendChild(newCategory);
     });
 
-    categoryXML.endDocument();
-    return categoryXML;
+    return newToolsXML;
   },
   generateBlocks: function generateBlocks(newToolsXML, tools) {
     return tools.map(function (_ref) {
